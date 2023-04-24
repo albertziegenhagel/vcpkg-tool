@@ -1022,7 +1022,11 @@ namespace
             auto res = cmd_execute_and_capture_output(cmd);
             if (!res.has_value() || res.get()->exit_code) return {};
             auto json = Json::parse_object(res.get()->output);
-            if (!json.has_value() || !json.get()->contains("cacheId")) return {};
+            if (!json.has_value() || !json.get()->contains("cacheId"))
+            {
+                Debug::print("Failed to extract 'cacheId' from JSON response: \"", res.get()->output, "\"\n");
+                return {};
+            }
             return json.get()->get("cacheId")->integer(VCPKG_LINE_INFO);
         }
 
@@ -1147,6 +1151,18 @@ namespace
                         {
                             ++upload_count;
                         }
+                        else if(res.has_value())
+                        {
+                            Debug::print("Failed commit binary cache: \"", res.get()->output, "\"\n");
+                        }
+                        else
+                        {
+                            Debug::print("Failed commit binary cache\n");
+                        }
+                    }
+                    else
+                    {
+                        Debug::print("Failed to put file\n");
                     }
                 }
             }
