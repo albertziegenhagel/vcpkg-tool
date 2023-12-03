@@ -1080,8 +1080,8 @@ namespace
                 else
                 {
                     Debug::print(fmt::format("{}: stdin WriteFileEx failure: {:x}\n", debug_id, GetLastError()));
-                    close_handle_mark_invalid(stdin_pipe.write_pipe);
                 }
+                close_handle_mark_invalid(stdin_pipe.write_pipe);
             }
 
             DWORD bytes_read = 0;
